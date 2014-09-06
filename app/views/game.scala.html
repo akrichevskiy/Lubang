@@ -1,0 +1,73 @@
+@(state: GameContext)
+
+@import helper._
+
+@main(title = "Lubang Menggalli") {
+
+<style>
+    table {
+    border-collapse: collapse;
+    }
+
+    table, td, th {
+    border: 1px solid black;
+    }
+</style>
+
+<h2>Lubang</h2>
+
+
+<script>
+   function onMove(pitIdx) {
+      $.ajax({
+        url: pitIdx,
+        type: 'POST',
+        success: function(results) {
+          // Refresh the page
+          location.reload();
+        }
+      });
+   }
+</script>
+
+@if(state.isOver){
+<div class="alert alert-success">
+    @state.gameOverMessage
+</div>
+}
+
+<table align="center" style="width:10%">
+
+    <tr>
+        @for((pit,index) <- state.topBoard.pits.reverse.zipWithIndex){
+        @if(index == 0) {
+        <td rowspan="2"><a>@pit</a></td>
+        } else{
+        @if(state.topBoard.isActive && pit > 0) {
+            <td><a href="#" onclick="onMove('@routes.Application.onMove(6-index)')">@pit</a></td>
+        } else {
+            <td><a>@pit</a></td>
+          }
+        }
+        }
+        @for((pit, index) <- state.bottomBoard.pits.zipWithIndex){
+        @if(index == 6) {
+        <td rowspan="2"><a>@pit</a></td>
+        }
+        }
+    </tr>
+    <tr>
+        @for((pit, index) <- state.bottomBoard.pits.zipWithIndex){
+        @if(index != 6) {
+        @if(state.bottomBoard.isActive && pit > 0) {
+            <td><a href="#" onclick="onMove('@routes.Application.onMove(index)')">@pit</a></td>
+        } else {
+            <td><a>@pit</a></td>
+        }
+        }
+        }
+    </tr>
+</table>
+
+
+}
