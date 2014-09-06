@@ -66,7 +66,7 @@ public class GameContextTest {
         topBoard.isActive = true;
         bottomBoard.pits = bottomPits;
         bottomBoard.isActive = false;
-        
+
         gameContext.onMove(5);
 
         assertTrue("game is over if top board is out of stones", gameContext.isOver);
