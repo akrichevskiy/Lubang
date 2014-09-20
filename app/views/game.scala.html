@@ -44,7 +44,7 @@
         <td rowspan="2"><a>@pit</a></td>
         } else{
         @if(state.topBoard.isActive && pit > 0) {
-            <td><a href="#" onclick="onMove('@routes.Application.onMove(6-index)')">@pit</a></td>
+            <td><a href="#" onclick="onMove('@routes.Application.move(6-index)')">@pit</a></td>
         } else {
             <td><a>@pit</a></td>
           }
@@ -60,7 +60,7 @@
         @for((pit, index) <- state.bottomBoard.pits.zipWithIndex){
         @if(index != 6) {
         @if(state.bottomBoard.isActive && pit > 0) {
-            <td><a href="#" onclick="onMove('@routes.Application.onMove(index)')">@pit</a></td>
+            <td><a href="#" onclick="move('@routes.Application.move(index)')">@pit</a></td>
         } else {
             <td><a>@pit</a></td>
         }

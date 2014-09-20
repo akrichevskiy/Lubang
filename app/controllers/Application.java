@@ -16,7 +16,7 @@ public class Application extends Controller {
     }
 
 
-    public static Result onMove(int pitIdx) {
+    public static Result move(int pitIdx) {
         Logger.info("move " + pitIdx);
         gameContext.onMove(pitIdx);
         return ok(game.render(gameContext));
