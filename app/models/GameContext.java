@@ -71,11 +71,10 @@ public class GameContext {
         Board src = getInactiveBoard();
         Board dst = getActiveBoard();
         Logger.debug("[capture before] pit dst:" + dstIdx + ";src board:" + src + ";dst board:" + dst);
-        int captureDstIdx = dstIdx;
-        int captureSrcIdx = Board.MAX_PITS - captureDstIdx - 2;
+        int captureSrcIdx = Board.MAX_PITS - dstIdx - 2;
         int seedsCaptured = src.capture(captureSrcIdx);
 
-        dst.pits[captureDstIdx] = 0;
+        dst.pits[dstIdx] = 0;
         dst.add(seedsCaptured + 1);
         Logger.debug("[capture after] seeds captured:" + seedsCaptured + ";src board:" + src + ";dst board:" + dst);
         boardState.state = BoardState.LastSeedPosition.NONEMPTY_PIT;
