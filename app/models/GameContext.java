@@ -21,7 +21,7 @@ public class GameContext {
 
     public void onMove(int idx) {
         int updatedIdx = reverseIdxForTopBoard(idx);
-        Logger.info("[move]start seed from pit:" + updatedIdx);
+        Logger.debug("[move]start seed from pit:" + updatedIdx);
         Board activeBoard = getActiveBoard();
         boardState = activeBoard.onMove(updatedIdx);
         updateStatusHandler();

@@ -54,7 +54,7 @@ public class Board {
 
     private BoardState lastSeedLocation(int fromPitIdx) {
         int lastPitIdx = (fromPitIdx + pits[fromPitIdx]) % MAX_PITS;
-        Logger.debug("[lastSeedLocation] pitIdx:" + fromPitIdx + "; lastPitIdx:" + lastPitIdx);
+        Logger.trace("[lastSeedLocation] pitIdx:" + fromPitIdx + "; lastPitIdx:" + lastPitIdx);
         if (lastPitIdx == MAX_PITS - 1) {
             return new BoardState(BoardState.LastSeedPosition.LUBANG);
         } else if (pits[lastPitIdx] == 0) {
