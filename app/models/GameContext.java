@@ -27,7 +27,7 @@ public class GameContext {
         updateStatusHandler();
     }
 
-    private int reverseIdxForTopBoard (int idx ) {
+    private int reverseIdxForTopBoard(int idx) {
         if (topBoard.isActive) {
             return Board.MAX_SEEDS - idx;
         }
@@ -42,7 +42,7 @@ public class GameContext {
                 break;
 //             CAPTURE:
             case EMPTY_PIT:
-                doCapture(boardState.captureIdx);
+                doCapture(boardState.captureIdx, getInactiveBoard(), getActiveBoard());
                 break;
 //             SAME_PLAYER_TURN:
             case LUBANG:
@@ -67,16 +67,14 @@ public class GameContext {
         Logger.debug("[change turn] top:" + topBoard.isActive + " bottom:" + bottomBoard.isActive);
     }
 
-    private void doCapture(int dstIdx) {
-        Board src = getInactiveBoard();
-        Board dst = getActiveBoard();
-        Logger.debug("[capture before] pit dst:" + dstIdx + ";src board:" + src + ";dst board:" + dst);
+    private void doCapture(int dstIdx, Board srcBoard, Board dstBoard) {
+        Logger.debug("[capture before] pit dst:" + dstIdx + ";from board:" + srcBoard + ";to board:" + dstBoard);
         int captureSrcIdx = Board.MAX_PITS - dstIdx - 2;
-        int seedsCaptured = src.capture(captureSrcIdx);
+        int seedsCaptured = srcBoard.capture(captureSrcIdx);
 
-        dst.pits[dstIdx] = 0;
-        dst.add(seedsCaptured + 1);
-        Logger.debug("[capture after] seeds captured:" + seedsCaptured + ";src board:" + src + ";dst board:" + dst);
+        dstBoard.pits[dstIdx] = 0;
+        dstBoard.add(seedsCaptured + 1);
+        Logger.debug("[capture after] seeds captured:" + seedsCaptured + ";from board:" + srcBoard + ";to board:" + dstBoard);
         boardState.state = BoardState.LastSeedPosition.NONEMPTY_PIT;
         updateStatusHandler();
     }
