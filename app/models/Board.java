@@ -57,6 +57,7 @@ public class Board {
         if (lastPitIdx == MAX_PITS - 1) {
             return new NextMove(MoveType.SAME_PLAYER_TURN);
         } else if (pits[lastPitIdx] == 0) {
+            doSow(currentPitIdx);
             return new NextMove(MoveType.CAPTURE, lastPitIdx);
         } else return new NextMove(MoveType.CHANGE_TURN);
     }
@@ -78,10 +79,7 @@ public class Board {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
-        result.append(this.getClass().getName());
-        result.append(" pits: " + Arrays.toString(pits));
-        return result.toString();
+        return String.format("%s, pits:%s", this.getClass().getName(), Arrays.toString(pits));
     }
 
     /**
@@ -102,6 +100,6 @@ public class Board {
         for (int i = 0; i < MAX_PITS - 1; i++) {
             seedsOnBoard += pits[i];
         }
-        return seedsOnBoard == 0 ? true : false;
+        return seedsOnBoard == 0;
     }
 }

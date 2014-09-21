@@ -14,21 +14,30 @@
     }
 </style>
 
-<h2>Lubang</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
+<script type="text/javascript" src="@routes.Application.jsRoutes"></script>
 
 <script>
-   function onMove(pitIdx) {
-      $.ajax({
-        url: pitIdx,
-        type: 'POST',
-        success: function(results) {
-          // Refresh the page
-          location.reload();
-        }
+    var doc = $ (document);
+    doc.ready (function() {
+
+      doc.on ('click', '.pit', function(e) {
+        var target = $(e.target);
+        console.log(target.attr('id'))
+        var id = target.attr('id')
+        appRoutes.controllers.Application.move(id).ajax( {
+          success : function ( data ) {
+            //target.closest('li').remove();
+            window.location.reload();
+          }
+        });
       });
-   }
-</script>
+    }) ;
+    </script>
+
+<h2>Lubang</h2>
+
 
 @if(state.isOver){
 <div class="alert alert-success">
@@ -44,7 +53,8 @@
         <td rowspan="2"><a>@pit</a></td>
         } else{
         @if(state.topBoard.isActive && pit > 0) {
-            <td><a href="#" onclick="onMove('@routes.Application.move(6-index)')">@pit</a></td>
+           <!--/* <td><a href="#" onclick="move('@routes.Application.move(6-index)')">@pit</a></td> */-->
+            <td><a href="#" id="@index" class="pit" >@pit</a></td>
         } else {
             <td><a>@pit</a></td>
           }
@@ -60,7 +70,8 @@
         @for((pit, index) <- state.bottomBoard.pits.zipWithIndex){
         @if(index != 6) {
         @if(state.bottomBoard.isActive && pit > 0) {
-            <td><a href="#" onclick="move('@routes.Application.move(index)')">@pit</a></td>
+            <!--<td><a href="#" onclick="move('@routes.Application.move(index)')">@pit</a></td>-->
+            <td><a href="#" class="pit" id="@index">@pit</a></td>
         } else {
             <td><a>@pit</a></td>
         }

@@ -4,7 +4,6 @@ package models;
 import play.Logger;
 
 import static models.NextMove.MoveType.CHANGE_TURN;
-
 /**
  * Mediator between boards
  */
@@ -14,20 +13,26 @@ public class GameContext {
     public boolean isOver;
     public String gameOverMessage;
     private NextMove nextMove;
-    private int currentIdx;
 
     public GameContext() {
         topBoard = new Board(true);
         bottomBoard = new Board(false);
-        currentIdx = -1;
         isOver = false;
     }
 
     public void onMove(int idx) {
-        currentIdx = idx;
+        int updatedIdx = reverseIdxForTopBoard(idx);
+        Logger.info("[move]start seed from pit:" + updatedIdx);
         Board activeBoard = getActiveBoard();
-        nextMove = activeBoard.onMove(idx);
+        nextMove = activeBoard.onMove(updatedIdx);
         updateStatusHandler();
+    }
+
+    private int reverseIdxForTopBoard (int idx ) {
+        if (topBoard.isActive) {
+            return Board.MAX_SEEDS - idx;
+        }
+        return idx;
     }
 
     private void updateStatusHandler() {
@@ -57,19 +62,20 @@ public class GameContext {
             topBoard.isActive = true;
             bottomBoard.isActive = false;
         }
-        Logger.info("top:" + topBoard.isActive + " bottom:" + bottomBoard.isActive);
+        Logger.info("[change turn] top:" + topBoard.isActive + " bottom:" + bottomBoard.isActive);
     }
 
     private void doCapture() {
-        Logger.info("capture:" + nextMove.captureIdx);
         Board src = getInactiveBoard();
         Board dst = getActiveBoard();
+        Logger.debug("[capture before] pit dst:" + nextMove.captureIdx + ";src board:" + src + ";dst board:" + dst);
         int captureDstIdx = nextMove.captureIdx;
         int captureSrcIdx = Board.MAX_PITS - captureDstIdx - 2;
         int seedsCaptured = src.capture(captureSrcIdx);
-        dst.pits[currentIdx] = 0;
-        dst.add(seedsCaptured + 1);
 
+        dst.pits[captureDstIdx] = 0;
+        dst.add(seedsCaptured + 1);
+        Logger.debug("[capture after] seeds captured:" + seedsCaptured + ";src board:" + src + ";dst board:" + dst);
         nextMove.moveType = CHANGE_TURN;
         updateStatusHandler();
     }

@@ -11,18 +11,19 @@ public class Application extends Controller {
     // in real app use database
     private static GameContext gameContext = new GameContext();
 
-    public static Result index() {
-        return ok(index.render("Your new application is ready."));
-    }
-
-
     public static Result move(int pitIdx) {
-        Logger.info("move " + pitIdx);
         gameContext.onMove(pitIdx);
         return ok(game.render(gameContext));
     }
 
     public static Result lubang() {
         return ok(game.render(gameContext));
+    }
+
+    public static Result jsRoutes()
+    {
+        response().setContentType("text/javascript");
+        return ok(Routes.javascriptRouter("appRoutes", //appRoutes will be the JS object available in our view
+                routes.javascript.Application.move()));
     }
 }

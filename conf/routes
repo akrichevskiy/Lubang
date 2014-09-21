@@ -3,9 +3,9 @@
 # ~~~~
 
 # Home page
-GET     /                          controllers.Application.index()
 GET     /lubang                    controllers.Application.lubang()
 POST    /lubang/move/:pitIdx       controllers.Application.move(pitIdx: Int)
 
 # Map static resources from the /public folder to the /assets URL path
+GET      /assets/js/routes          controllers.Application.jsRoutes()
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
