@@ -79,7 +79,15 @@ public class Board {
 
     @Override
     public String toString() {
-        return String.format("%s, pits:%s", this.getClass().getName(), Arrays.toString(pits));
+        return String.format("%s, pits:%s; total seeds:%d", this.getClass().getName(), Arrays.toString(pits), totalSeeds());
+    }
+
+    private int totalSeeds() {
+        int totalSeeds = 0;
+        for(int i = 0 ; i < pits.length;i++ ) {
+            totalSeeds += pits[i];
+        }
+        return  totalSeeds;
     }
 
     /**
