@@ -2,7 +2,7 @@ package models;
 
 import org.junit.Test;
 
-import static models.NextMove.*;
+import static  models.BoardState.*;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
@@ -18,30 +18,30 @@ public class BoardTest {
 
     @Test
     public void nextMoveToAnotherPlayer() {
-        NextMove expected = new NextMove(MoveType.CHANGE_TURN, -1);
+        BoardState expected = new BoardState(LastSeedPosition.NONEMPTY_PIT, -1);
         Board board = new Board(true);
-        NextMove actual = board.onMove(3);
-        assertEquals(actual.moveType, expected.moveType);
+        BoardState actual = board.onMove(3);
+        assertEquals(actual.state, expected.state);
     }
 
     @Test
     public void nextMoveToTheSamePlayer() {
-        NextMove expected = new NextMove(MoveType.SAME_PLAYER_TURN, -1);
+        BoardState expected = new BoardState(LastSeedPosition.LUBANG, -1);
         Board board = new Board(true);
         int[] p = {1, 1, 1, 1, 1, 1, 0};
         board.pits = p;
-        NextMove actual = board.onMove(5);
-        assertEquals(actual.moveType, expected.moveType);
+        BoardState actual = board.onMove(5);
+        assertEquals(actual.state, expected.state);
     }
 
     @Test
     public void nextMoveCapture() {
-        NextMove expected = new NextMove(MoveType.CAPTURE, 2);
+        BoardState expected = new BoardState(LastSeedPosition.EMPTY_PIT, 2);
         Board board = new Board(true);
         int[] p = {1, 1, 0, 1, 1, 4, 2};
         board.pits = p;
-        NextMove actual = board.onMove(5);
-        assertEquals(actual.moveType, expected.moveType);
+        BoardState actual = board.onMove(5);
+        assertEquals(actual.state, expected.state);
     }
 
     @Test

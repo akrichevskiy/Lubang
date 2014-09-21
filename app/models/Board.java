@@ -4,7 +4,6 @@ import play.Logger;
 
 import java.util.Arrays;
 
-import static models.NextMove.MoveType;
 
 /**
  * Representation for player's pits and his Lubang Menggali
@@ -28,38 +27,39 @@ public class Board {
      * Handles movement
      *
      * @param idx pit number
-     * @return type of next move see @NextType
+     * @return boardState see @BoardStatus
      */
-    public NextMove onMove(int idx) {
-        NextMove nextMove = nextMove(idx);
-        if (nextMove.moveType != MoveType.CAPTURE) {
-            doSow(idx);
-        }
-        return nextMove;
+    public BoardState onMove(int idx) {
+        BoardState boardState = lastSeedLocation(idx);
+        doSow(idx);
+        return boardState;
     }
 
     /**
      * Sows seeds in pits
      *
-     * @param idx - pit to start sowing from
+     * @param fromPitIdx - pit to start sowing from
+     * @return  lastPitIdx - pit where the last seed will end up
      */
-    public void doSow(int idx) {
-        int count = this.pits[idx];
-        this.pits[idx] = 0;
+    private int doSow(int fromPitIdx) {
+        int count = this.pits[fromPitIdx];
+        this.pits[fromPitIdx] = 0;
+        int nextPit = -1;
         for (int i = 0; i < count; i++) {
-            int nextPit = (idx + i + 1) % MAX_PITS;
+            nextPit = (fromPitIdx + i + 1) % MAX_PITS;
             pits[nextPit] = pits[nextPit] + 1;
         }
+        return nextPit;
     }
 
-    public NextMove nextMove(int currentPitIdx) {
-        int lastPitIdx = (currentPitIdx + pits[currentPitIdx]) % MAX_PITS;
+    private BoardState lastSeedLocation(int fromPitIdx) {
+        int lastPitIdx = (fromPitIdx + pits[fromPitIdx]) % MAX_PITS;
+        Logger.debug("[lastSeedLocation] pitIdx:" + fromPitIdx + "; lastPitIdx:" + lastPitIdx);
         if (lastPitIdx == MAX_PITS - 1) {
-            return new NextMove(MoveType.SAME_PLAYER_TURN);
+            return new BoardState(BoardState.LastSeedPosition.LUBANG);
         } else if (pits[lastPitIdx] == 0) {
-            doSow(currentPitIdx);
-            return new NextMove(MoveType.CAPTURE, lastPitIdx);
-        } else return new NextMove(MoveType.CHANGE_TURN);
+            return new BoardState(BoardState.LastSeedPosition.EMPTY_PIT, lastPitIdx);
+        } else return new BoardState(BoardState.LastSeedPosition.NONEMPTY_PIT);
     }
 
     public int capture(int idx) {

@@ -3,7 +3,6 @@ package models;
 
 import play.Logger;
 
-import static models.NextMove.MoveType.CHANGE_TURN;
 /**
  * Mediator between boards
  */
@@ -12,7 +11,7 @@ public class GameContext {
     public Board bottomBoard;
     public boolean isOver;
     public String gameOverMessage;
-    private NextMove nextMove;
+    private BoardState boardState;
 
     public GameContext() {
         topBoard = new Board(true);
@@ -24,7 +23,7 @@ public class GameContext {
         int updatedIdx = reverseIdxForTopBoard(idx);
         Logger.info("[move]start seed from pit:" + updatedIdx);
         Board activeBoard = getActiveBoard();
-        nextMove = activeBoard.onMove(updatedIdx);
+        boardState = activeBoard.onMove(updatedIdx);
         updateStatusHandler();
     }
 
@@ -36,14 +35,17 @@ public class GameContext {
     }
 
     private void updateStatusHandler() {
-        switch (nextMove.moveType) {
-            case CHANGE_TURN:
+        switch (boardState.state) {
+//            CHANGE_TURN:
+            case NONEMPTY_PIT:
                 flipActiveBoard();
                 break;
-            case CAPTURE:
-                doCapture();
+//             CAPTURE:
+            case EMPTY_PIT:
+                doCapture(boardState.captureIdx);
                 break;
-            case SAME_PLAYER_TURN:
+//             SAME_PLAYER_TURN:
+            case LUBANG:
                 break;
             default:
                 Logger.warn("unknown move type");
@@ -62,21 +64,21 @@ public class GameContext {
             topBoard.isActive = true;
             bottomBoard.isActive = false;
         }
-        Logger.info("[change turn] top:" + topBoard.isActive + " bottom:" + bottomBoard.isActive);
+        Logger.debug("[change turn] top:" + topBoard.isActive + " bottom:" + bottomBoard.isActive);
     }
 
-    private void doCapture() {
+    private void doCapture(int dstIdx) {
         Board src = getInactiveBoard();
         Board dst = getActiveBoard();
-        Logger.debug("[capture before] pit dst:" + nextMove.captureIdx + ";src board:" + src + ";dst board:" + dst);
-        int captureDstIdx = nextMove.captureIdx;
+        Logger.debug("[capture before] pit dst:" + dstIdx + ";src board:" + src + ";dst board:" + dst);
+        int captureDstIdx = dstIdx;
         int captureSrcIdx = Board.MAX_PITS - captureDstIdx - 2;
         int seedsCaptured = src.capture(captureSrcIdx);
 
         dst.pits[captureDstIdx] = 0;
         dst.add(seedsCaptured + 1);
         Logger.debug("[capture after] seeds captured:" + seedsCaptured + ";src board:" + src + ";dst board:" + dst);
-        nextMove.moveType = CHANGE_TURN;
+        boardState.state = BoardState.LastSeedPosition.NONEMPTY_PIT;
         updateStatusHandler();
     }
 
