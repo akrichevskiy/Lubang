@@ -3,6 +3,8 @@ package models;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class GameContextTest {
@@ -36,13 +38,13 @@ public class GameContextTest {
         bottomBoard.pits = bottomPits;
         bottomBoard.isActive = false;
 
-        gameContext.onMove(0);
+        gameContext.onMove(6);
 
         int[] expectedTop = {0, 0, 0, 0, 0, 0, 3};
         int[] expectedBottom = {0, 0, 0, 0, 0, 0, 0};
 
-        assertArrayEquals(expectedTop, topBoard.pits);
-        assertArrayEquals(expectedBottom, bottomBoard.pits);
+        assertArrayEquals(String.format("expected top board:%s; actual:%s", Arrays.toString(expectedTop), Arrays.toString(topBoard.pits)), expectedTop, topBoard.pits);
+        assertArrayEquals("bottom board is different from expected", expectedBottom, bottomBoard.pits);
     }
 
     @Test
