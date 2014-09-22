@@ -1,4 +1,4 @@
-package models;
+package models.board;
 
 import play.Logger;
 

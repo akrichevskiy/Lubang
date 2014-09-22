@@ -1,8 +1,10 @@
 package models;
 
+import models.board.Board;
+import models.board.BoardState;
 import org.junit.Test;
 
-import static  models.BoardState.*;
+import static models.board.BoardState.*;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 

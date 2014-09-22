@@ -1,5 +1,6 @@
 package models;
 
+import models.board.Board;
 import org.junit.Before;
 import org.junit.Test;
 

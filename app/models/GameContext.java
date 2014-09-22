@@ -1,6 +1,11 @@
 package models;
 
 
+import models.board.Board;
+import models.board.BoardState;
+import models.command.CaptureCommand;
+import models.command.FlipActiveBoardCommand;
+import models.command.GameOverCommand;
 import play.Logger;
 
 /**
@@ -38,11 +43,11 @@ public class GameContext {
         switch (boardState.state) {
 //            CHANGE_TURN:
             case NONEMPTY_PIT:
-                flipActiveBoard();
+                new FlipActiveBoardCommand().execute(this);
                 break;
 //             CAPTURE:
             case EMPTY_PIT:
-                doCapture(boardState.captureIdx, getInactiveBoard(), getActiveBoard());
+                new CaptureCommand().execute(boardState.captureIdx, this);
                 break;
 //             SAME_PLAYER_TURN:
             case LUBANG:
@@ -52,51 +57,15 @@ public class GameContext {
                 break;
         }
         if (getActiveBoard().isEmpty() || getInactiveBoard().isEmpty()) {
-            doFinishGame();
+            new GameOverCommand().execute(this);
         }
     }
 
-    private void flipActiveBoard() {
-        if (topBoard.isActive) {
-            topBoard.isActive = false;
-            bottomBoard.isActive = true;
-        } else {
-            topBoard.isActive = true;
-            bottomBoard.isActive = false;
-        }
-        Logger.debug("[change turn] top:" + topBoard.isActive + " bottom:" + bottomBoard.isActive);
-    }
-
-    private void doCapture(int dstIdx, Board srcBoard, Board dstBoard) {
-        Logger.debug("[capture before] pit dst:" + dstIdx + ";from board:" + srcBoard + ";to board:" + dstBoard);
-        int captureSrcIdx = Board.MAX_PITS - dstIdx - 2;
-        int seedsCaptured = srcBoard.capture(captureSrcIdx);
-
-        dstBoard.pits[dstIdx] = 0;
-        dstBoard.add(seedsCaptured + 1);
-        Logger.debug("[capture after] seeds captured:" + seedsCaptured + ";from board:" + srcBoard + ";to board:" + dstBoard);
-        boardState.state = BoardState.LastSeedPosition.NONEMPTY_PIT;
-        updateStatusHandler();
-    }
-
-    private void doFinishGame() {
-        int topPlayerScore = topBoard.dump();
-        int bottomPlayerScore = bottomBoard.dump();
-        if (topPlayerScore > bottomPlayerScore) {
-            gameOverMessage = String.format("Top player won, %d:%d", topPlayerScore, bottomPlayerScore);
-        } else if (bottomPlayerScore > topPlayerScore) {
-            gameOverMessage = String.format("Bottom player won, %d:%d", bottomPlayerScore, topPlayerScore);
-        } else {
-            gameOverMessage = String.format("Draw %d:%d", bottomPlayerScore, topPlayerScore);
-        }
-        isOver = true;
-    }
-
-    private Board getActiveBoard() {
+    public Board getActiveBoard() {
         return topBoard.isActive ? topBoard : bottomBoard;
     }
 
-    private Board getInactiveBoard() {
+    public Board getInactiveBoard() {
         return topBoard.isActive ? bottomBoard : topBoard;
     }
 }
