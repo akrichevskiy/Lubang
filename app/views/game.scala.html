@@ -53,7 +53,6 @@
         <td rowspan="2"><a>@pit</a></td>
         } else{
         @if(state.topBoard.isActive && pit > 0) {
-           <!--/* <td><a href="#" onclick="move('@routes.Application.move(6-index)')">@pit</a></td> */-->
             <td><a href="#" id="@index" class="pit" >@pit</a></td>
         } else {
             <td><a>@pit</a></td>
@@ -70,7 +69,6 @@
         @for((pit, index) <- state.bottomBoard.pits.zipWithIndex){
         @if(index != 6) {
         @if(state.bottomBoard.isActive && pit > 0) {
-            <!--<td><a href="#" onclick="move('@routes.Application.move(index)')">@pit</a></td>-->
             <td><a href="#" class="pit" id="@index">@pit</a></td>
         } else {
             <td><a>@pit</a></td>
