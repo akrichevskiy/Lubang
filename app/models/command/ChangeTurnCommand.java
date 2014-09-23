@@ -2,7 +2,7 @@ package models.command;
 
 import models.GameContext;
 
-public class FlipActiveBoardCommand {
+public class ChangeTurnCommand {
     public void execute(GameContext gc) {
         if (gc.topBoard.isActive) {
             gc.topBoard.isActive = false;

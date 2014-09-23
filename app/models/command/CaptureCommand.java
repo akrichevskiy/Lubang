@@ -14,6 +14,6 @@ public class CaptureCommand {
         dstBoard.pits[dstIdx] = 0;
         dstBoard.add(seedsCaptured + 1);
         Logger.debug("[capture after] seeds captured:" + seedsCaptured + ";from board:" + srcBoard + ";to board:" + dstBoard);
-        new FlipActiveBoardCommand().execute(gc);
+        new ChangeTurnCommand().execute(gc);
     }
 }
