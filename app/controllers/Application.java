@@ -20,10 +20,16 @@ public class Application extends Controller {
         return ok(game.render(gameContext));
     }
 
+    public static Result restart() {
+        gameContext = new GameContext();
+        return ok(game.render(gameContext));
+    }
+
     public static Result jsRoutes()
     {
         response().setContentType("text/javascript");
         return ok(Routes.javascriptRouter("appRoutes", //appRoutes will be the JS object available in our view
-                routes.javascript.Application.move()));
+                routes.javascript.Application.move(),
+                routes.javascript.Application.restart()));
     }
 }

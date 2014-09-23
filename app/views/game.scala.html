@@ -33,11 +33,20 @@
           }
         });
       });
+
+      // Create a new person
+      $('#restart').click(function() {
+          appRoutes.controllers.Application.restart().ajax({
+            success : function (data) {
+                window.location.reload();
+            }
+          });
+        });
     }) ;
     </script>
 
 <h2>Lubang</h2>
-
+<input type="button" value="Restart" id="restart"/>
 
 @if(state.isOver){
 <div class="alert alert-success">
