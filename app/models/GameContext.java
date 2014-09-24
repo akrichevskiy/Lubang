@@ -30,7 +30,7 @@ public class GameContext {
 
     public void onMove(int idx) {
         int updatedIdx = reverseIdxForTopBoard(idx);
-        Logger.debug("[move]start seed from pit:" + updatedIdx);
+        Logger.debug("[move]seeding from pit:" + updatedIdx + "; activeBoard:" + dbgActiveBoard());
         Board activeBoard = getActiveBoard();
         BoardState boardState = activeBoard.onMove(updatedIdx);
         rules.apply(boardState, this);
@@ -49,5 +49,14 @@ public class GameContext {
 
     public Board getInactiveBoard() {
         return topBoard.isActive ? bottomBoard : topBoard;
+    }
+
+    private String dbgActiveBoard() {
+        if (topBoard.isActive) {
+            return "top";
+        } else {
+            return "bottom";
+        }
+
     }
 }

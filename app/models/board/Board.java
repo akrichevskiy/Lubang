@@ -1,6 +1,5 @@
 package models.board;
 
-import play.Logger;
 
 import java.util.Arrays;
 
@@ -30,9 +29,8 @@ public class Board {
      * @return boardState see @BoardStatus
      */
     public BoardState onMove(int idx) {
-        BoardState boardState = lastSeedLocation(idx);
-        doSow(idx);
-        return boardState;
+        int lastPitIdx = doSow(idx);
+        return resolveState(lastPitIdx);
     }
 
     /**
@@ -52,12 +50,10 @@ public class Board {
         return nextPit;
     }
 
-    private BoardState lastSeedLocation(int fromPitIdx) {
-        int lastPitIdx = (fromPitIdx + pits[fromPitIdx]) % MAX_PITS;
-        Logger.trace("[lastSeedLocation] pitIdx:" + fromPitIdx + "; lastPitIdx:" + lastPitIdx);
+    private BoardState resolveState(int lastPitIdx) {
         if (lastPitIdx == MAX_PITS - 1) {
             return new BoardState(BoardState.LastSeedPosition.LUBANG);
-        } else if (pits[lastPitIdx] == 0) {
+        } else if (pits[lastPitIdx] == 1) {
             return new BoardState(BoardState.LastSeedPosition.EMPTY_PIT, lastPitIdx);
         } else return new BoardState(BoardState.LastSeedPosition.NONEMPTY_PIT);
     }
