@@ -53,7 +53,7 @@ public class Board {
     private BoardState resolveState(int lastPitIdx) {
         if (lastPitIdx == MAX_PITS - 1) {
             return new BoardState(BoardState.LastSeedPosition.LUBANG);
-        } else if (pits[lastPitIdx] == 1) {
+        } else if (lastPitIdx != -1 && pits[lastPitIdx] == 1) {
             return new BoardState(BoardState.LastSeedPosition.EMPTY_PIT, lastPitIdx);
         } else return new BoardState(BoardState.LastSeedPosition.NONEMPTY_PIT);
     }
